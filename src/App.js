@@ -27,12 +27,13 @@ function App() {
       </Routes>
 
       <button
+        className="mt-2"
         onClick={async () => {
           console.log("Updating address...");
           const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
           const currentAddress = await web3Provider.getSigner().provider.provider.selectedAddress;
 
-          setAddress(currentAddress);
+          // setAddress(currentAddress);
 
           let web3;
           if (window.ethereum) {
@@ -44,7 +45,11 @@ function App() {
             // web3 = new Web3(window.web3.currentProvider);
             web3 = new ethers.providers.Web3Provider(window.web3);
           };
+          let accounts = await web3.listAccounts();
           console.log(web3);
+          console.log(accounts);
+          console.log(accounts[0]);
+          setAddress(accounts[0]);
         }}      
       >
         Update Address

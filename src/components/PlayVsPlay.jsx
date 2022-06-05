@@ -205,7 +205,7 @@ export default function PlayVsPlay({ boardWidth, address }) {
           className="rc-button"
           onClick={() => createNewBoard()}
         >
-          Create new game
+          new game
         </button>
       </div>
     );
