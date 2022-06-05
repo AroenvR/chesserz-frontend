@@ -15,7 +15,7 @@ https://github.com/jhlywa/chess.js/blob/master/README.md
 
 ---
 
-Creating a GitHub page:
+Creating a GitHub page: (use Horeku)
 Adjust package.json to include homepage, predeploy and deploy.
 npm i -D gh-pages
 
