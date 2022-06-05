@@ -13,6 +13,7 @@ import Poop from './components/Poop';
 function App() {
   const [address, setAddress] = useState("");
 
+  console.log("Hi");
   console.log(address);
 
   return (
@@ -40,11 +41,13 @@ function App() {
             console.log("window.ethereum");
             // web3 = new Web3(window.ethereum);
             web3 = new ethers.providers.Web3Provider(window.ethereum);
+            await window.ethereum.enable();
           } else if (window.web3) {
             console.log("window.web3");
             // web3 = new Web3(window.web3.currentProvider);
             web3 = new ethers.providers.Web3Provider(window.web3);
           };
+          
           let accounts = await web3.listAccounts();
           console.log(web3);
           console.log(accounts);
