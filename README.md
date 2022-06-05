@@ -15,6 +15,18 @@ https://github.com/jhlywa/chess.js/blob/master/README.md
 
 ---
 
+Creating a GitHub page:
+Adjust package.json to include homepage, predeploy and deploy.
+npm i -D gh-pages
+
+Create a gh-pages branch in your repository.
+
+
+
+When pushing new code, remember to execute npm run deploy to update the gh-pages branch.
+
+---
+
 Mental note of where I want to go with this.
 
 A chess game with the following functionalities:
