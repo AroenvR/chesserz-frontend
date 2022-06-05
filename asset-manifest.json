@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/chesserz-frontend/static/css/main.56f8f2f7.css",
-    "main.js": "/chesserz-frontend/static/js/main.6f437167.js",
+    "main.js": "/chesserz-frontend/static/js/main.53fa1563.js",
     "static/js/787.e59ae3a3.chunk.js": "/chesserz-frontend/static/js/787.e59ae3a3.chunk.js",
     "index.html": "/chesserz-frontend/index.html",
     "main.56f8f2f7.css.map": "/chesserz-frontend/static/css/main.56f8f2f7.css.map",
-    "main.6f437167.js.map": "/chesserz-frontend/static/js/main.6f437167.js.map",
+    "main.53fa1563.js.map": "/chesserz-frontend/static/js/main.53fa1563.js.map",
     "787.e59ae3a3.chunk.js.map": "/chesserz-frontend/static/js/787.e59ae3a3.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.56f8f2f7.css",
-    "static/js/main.6f437167.js"
+    "static/js/main.53fa1563.js"
   ]
 }
