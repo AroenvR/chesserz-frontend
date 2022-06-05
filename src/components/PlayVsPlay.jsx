@@ -16,6 +16,9 @@ export default function PlayVsPlay({ boardWidth, address }) {
   const [loading, setLoading] = useState(false);
   const [turnPlayer, setTurnPlayer] = useState(""); // 'white' or 'black' (taken from the incoming FEN)
 
+  // console.log("Turn player: " + turnPlayer);
+  // console.log("Current board state: " + game.fen());
+
   /**
    * Executed every time the page is rendered.
    * Fetches the board's current state from the backend.
@@ -79,20 +82,51 @@ export default function PlayVsPlay({ boardWidth, address }) {
    * @returns 
    */
   const validateCurrentPlayer = () => {
+    console.log("Validating user...");
     // const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
     // const playerAddress = web3Provider.getSigner().provider.provider.selectedAddress.toLowerCase();
     
-    if (turnPlayer === "w") {
-      if (address == whiteAddress.toLowerCase()) {
-        return true;
-      }
-    } else {
-      if (address == blackAddress.toLowerCase()) {
-        return true;
-      }
+    console.log("Actual turn player: " + turnPlayer);
+
+    switch (turnPlayer) {
+      case "w":
+        console.log("Entered case w");
+        if (address.toLowerCase() === whiteAddress.toLowerCase()) {
+          console.log("White's move is accepted.");
+          return true;
+        }
+        break;
+
+      case "b":
+        console.log("Entered case b");
+        if (address.toLowerCase() === blackAddress.toLowerCase()) {
+          console.log("Black's move is accepted.");
+          return true;
+        }
+        break;
+
+      default:
+        console.log("Entered default");
+        return false;
     }
 
-    return false;
+    // if (turnPlayer == "w") {
+    //   console.log("Turn player === w");
+    //   console.log(address + " === " + whiteAddress);
+    //   if (address.toLowerCase() == whiteAddress.toLowerCase()) {
+    //     console.log("White's move is accepted.");
+    //     return true;
+    //   }
+    // } else {
+    //   console.log("Turn player == w");
+    //   console.log(address + " === " + blackAddress);
+    //   if (address.toLowerCase() == blackAddress.toLowerCase()) {
+    //     console.log("Black's move is accepted.");
+    //     return true;
+    //   }
+    // }
+
+    // return false;
   }
 
   /**
@@ -113,6 +147,7 @@ export default function PlayVsPlay({ boardWidth, address }) {
    * Updates the board after a move.
    */
   function onDrop(sourceSquare, targetSquare) {
+    console.log("User attempted to move a piece.");
     if(!validateCurrentPlayer()) return;
 
     const gameCopy = { ...game };
