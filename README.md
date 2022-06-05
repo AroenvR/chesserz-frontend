@@ -20,7 +20,8 @@ Adjust package.json to include homepage, predeploy and deploy.
 npm i -D gh-pages
 
 Create a gh-pages branch in your repository.
-
+Go to repository settings -> pages -> 
+    set source to gh-pages branch and /root
 
 
 When pushing new code, remember to execute npm run deploy to update the gh-pages branch.

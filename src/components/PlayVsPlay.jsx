@@ -1,16 +1,22 @@
 import { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { ethers } from "ethers";
 import { Chess } from 'chess.js'
 import { Chessboard } from 'react-chessboard';
 
-import axiosConfig from '../service/axiosConfig';
+import FenBoardService from '../smart_contracts/FenBoardService.json';
+
 import { isTruthy } from '../service/isTruthy';
 
 export default function PlayVsPlay({ boardWidth }) {
+  const { whiteAddress, blackAddress } = useParams();
+  // const whiteAddress = white.toUpperCase();
+  // const blackAddress = black.toUpperCase();
+
   const chessboardRef = useRef();
   const [game, setGame] = useState();
-
-  const address_white = "0xWhite";
-  const address_black = "0xBlack";
+  const [loading, setLoading] = useState(false);
+  const [turnPlayer, setTurnPlayer] = useState(""); // 'white' or 'black' (taken from the incoming FEN)
 
   /**
    * Executed every time the page is rendered.
@@ -19,38 +25,78 @@ export default function PlayVsPlay({ boardWidth }) {
   useEffect(() => {
 
     const fetchBoardState = async () => {
-      const url = `api/fen/board-state?white=${address_white}&black=${address_black}`;
-      await axiosConfig.get(url)
-            .then(resp => {
-              if (resp.status === 200) {
-                setGame(new Chess(resp.data));
-              }
-            })
-            .catch(ex => {
-                console.log(ex);
-            });
+      try {
+
+        const contractAddress = FenBoardService["deployment"]["address"];
+        const contractABI = FenBoardService["abi"];
+        
+        const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+        const smartContract = new ethers.Contract(contractAddress, contractABI, web3Provider);
+
+        const reply = await smartContract.getBoardState(whiteAddress, blackAddress);
+        console.log(reply);
+
+        const fenStringArray = reply.split(" ");
+        setTurnPlayer(fenStringArray[1]);
+
+        setGame(new Chess(reply));
+      } catch (ex) {
+        console.log(ex);
+        setGame(new Chess());
+      }
     }
 
-    fetchBoardState();
-  }, []);
+    setInterval(() => fetchBoardState(), 2000)
+  }, [loading, whiteAddress, blackAddress]);
 
   /**
    * Update the board in the backend.
    * More info on FEN notation: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
    * @param {string} fen - The board's current state using FEN notation.
    */
-  const updateBackendBoard = async (fen) => {
-    const url = `api/fen/update-board?fen=${fen}&white=${address_white}&black=${address_black}`;
-    await axiosConfig.post(url)
-            .then(resp => {
-              if (resp.status === 201) {
-                setGame(new Chess(resp.data));
-              }
-            })
-            .catch(ex => {
-                console.log(ex);
-            });
-  }      
+  const updateBoard = async (fen) => {
+    setLoading(true);
+
+    try {
+      const contractAddress = FenBoardService["deployment"]["address"];
+      const contractABI = FenBoardService["abi"];
+
+      const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      const smartContract = new ethers.Contract(contractAddress, contractABI, web3Provider.getSigner());
+
+      // Send a transaction to the smart contract to create a new board.
+      const tx = await smartContract.updateBoardState(fen, whiteAddress, blackAddress);
+      await tx.wait();
+      console.log(tx);
+
+    } catch (ex) {
+      console.log(ex);
+
+    } finally {
+      setLoading(false);
+    }
+  }
+  
+  /**
+   * 
+   * @returns 
+   */
+  const validateCurrentPlayer = () => {
+    const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+    const playerAddress = web3Provider.getSigner().provider.provider.selectedAddress.toLowerCase();
+    
+    if (turnPlayer === "w") {
+      if (playerAddress == whiteAddress.toLowerCase()) {
+        return true;
+      }
+    } else {
+      if (playerAddress == blackAddress.toLowerCase()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   /**
    * Resets the board (or undoes the last move WIP)
@@ -60,7 +106,7 @@ export default function PlayVsPlay({ boardWidth }) {
       const update = { ...g };
       modify(update);
       
-      updateBackendBoard(update.fen());
+      updateBoard(update.fen());
 
       return update;
     });
@@ -70,6 +116,8 @@ export default function PlayVsPlay({ boardWidth }) {
    * Updates the board after a move.
    */
   function onDrop(sourceSquare, targetSquare) {
+    if(!validateCurrentPlayer()) return;
+
     const gameCopy = { ...game };
     const move = gameCopy.move({
       from: sourceSquare,
@@ -79,7 +127,7 @@ export default function PlayVsPlay({ boardWidth }) {
     setGame(gameCopy);
 
     if (move) {
-      updateBackendBoard(game.fen());
+      updateBoard(game.fen());
 
       return move;
     }
@@ -88,21 +136,33 @@ export default function PlayVsPlay({ boardWidth }) {
   /**
    * Creates a new game for address_white and address_black.
    */
-  const createNewGame = () => {
-    const url = `api/fen/create-game?white=${address_white}&black=${address_black}`;
-    axiosConfig.post(url)
-            .then(resp => {
-                if (resp.status === 201) {
-                  setGame(new Chess(resp.data));
-                }
-            })
-            .catch(ex => {
-                console.log(ex);
-            });
+  const createNewBoard = async () => {
+    setLoading(true);
+
+    try {
+      
+      const contractAddress = FenBoardService["deployment"]["address"];
+      const contractABI = FenBoardService["abi"];
+
+      const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      const smartContract = new ethers.Contract(contractAddress, contractABI, web3Provider.getSigner());
+
+      // Send a transaction to the smart contract to create a new board.
+      const tx = await smartContract.createNewBoard(whiteAddress, blackAddress);
+      await tx.wait();
+      console.log(tx);
+
+    } catch (ex) {
+      console.log(ex);
+       
+    } finally {
+      setLoading(false);
+    }
   }
 
   const renderBoard = () => {
     if (!isTruthy(game))  return (<h1>Loading ...</h1>);
+    if (loading)  return (<h1>Loading ...</h1>);
 
     return (
       <div>
@@ -146,7 +206,7 @@ export default function PlayVsPlay({ boardWidth }) {
   
         <button
           className="rc-button"
-          onClick={() => createNewGame()}
+          onClick={() => createNewBoard()}
         >
           Create new game
         </button>
