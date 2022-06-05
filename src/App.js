@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react"; 
 import { Routes, Route } from 'react-router-dom';
+import { ethers } from "ethers";
 
 import './App.scss';
 import PlayVsPlay from './components/PlayVsPlay';
@@ -9,8 +11,9 @@ import Poop from './components/Poop';
 // http://localhost:3000/chesserz-frontend/game?white=WALLET-ADDRESS-WHITE?black=WALLET-ADDRESS-BLACK
 // /chesserz-frontend/game?white=:white?black=:black
 function App() {
+  const [address, setAddress] = useState("");
 
-  console.log("Hello. New. New.");
+  console.log(address);
 
   return (
     <div id="App">      
@@ -19,9 +22,21 @@ function App() {
 
         <Route path="/chesserz-frontend/*" element={<Welcome />} />
         <Route path="/chesserz-frontend/poop" element={<Poop />} />
-        <Route path="/chesserz-frontend/game/:whiteAddress/:blackAddress" element={<PlayVsPlay />} />
+        <Route path="/chesserz-frontend/game/:whiteAddress/:blackAddress" element={<PlayVsPlay address={address} />} />
 
       </Routes>
+
+      <button
+        onClick={async () => {
+          console.log("Updating address...");
+          const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+          const currentAddress = await web3Provider.getSigner().provider.provider.selectedAddress;
+
+          setAddress(currentAddress);
+        }}      
+      >
+        Update Address
+      </button>
 
     </div>
   );

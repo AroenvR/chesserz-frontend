@@ -8,10 +8,8 @@ import FenBoardService from '../smart_contracts/FenBoardService.json';
 
 import { isTruthy } from '../service/isTruthy';
 
-export default function PlayVsPlay({ boardWidth }) {
+export default function PlayVsPlay({ boardWidth, address }) {
   const { whiteAddress, blackAddress } = useParams();
-  // const whiteAddress = white.toUpperCase();
-  // const blackAddress = black.toUpperCase();
 
   const chessboardRef = useRef();
   const [game, setGame] = useState();
@@ -34,7 +32,6 @@ export default function PlayVsPlay({ boardWidth }) {
         const smartContract = new ethers.Contract(contractAddress, contractABI, web3Provider);
 
         const reply = await smartContract.getBoardState(whiteAddress, blackAddress);
-        console.log(reply);
 
         const fenStringArray = reply.split(" ");
         setTurnPlayer(fenStringArray[1]);
@@ -47,7 +44,7 @@ export default function PlayVsPlay({ boardWidth }) {
     }
 
     setInterval(() => fetchBoardState(), 2000)
-  }, [loading, whiteAddress, blackAddress]);
+  }, [address, loading, whiteAddress, blackAddress]);
 
   /**
    * Update the board in the backend.
@@ -82,15 +79,15 @@ export default function PlayVsPlay({ boardWidth }) {
    * @returns 
    */
   const validateCurrentPlayer = () => {
-    const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
-    const playerAddress = web3Provider.getSigner().provider.provider.selectedAddress.toLowerCase();
+    // const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+    // const playerAddress = web3Provider.getSigner().provider.provider.selectedAddress.toLowerCase();
     
     if (turnPlayer === "w") {
-      if (playerAddress == whiteAddress.toLowerCase()) {
+      if (address == whiteAddress.toLowerCase()) {
         return true;
       }
     } else {
-      if (playerAddress == blackAddress.toLowerCase()) {
+      if (address == blackAddress.toLowerCase()) {
         return true;
       }
     }
