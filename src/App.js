@@ -39,7 +39,13 @@ function App() {
           let web3;
           if (window.ethereum) {
             console.log("window.ethereum");
-            // web3 = new Web3(window.ethereum);
+            
+              // try { <--- Possibly deprecated? Check if this works at some point.
+              //   await window.ethereum.request({ method: "eth_requestAccounts" });
+              // } catch(ex) {
+              //   console.log("Error: " + ex);
+              // }
+              
             web3 = new ethers.providers.Web3Provider(window.ethereum);
             await window.ethereum.enable();
           } else if (window.web3) {

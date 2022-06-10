@@ -1,0 +1,107 @@
+{
+  "address": "0x1EE196BC220ac2F7Af99475d1FD0F3b6614c8CF1",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "address_white",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "address_black",
+          "type": "address"
+        }
+      ],
+      "name": "createBoard",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "address_white",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "address_black",
+          "type": "address"
+        }
+      ],
+      "name": "findBoardByAddresses",
+      "outputs": [
+        {
+          "internalType": "contract FenBoard",
+          "name": "fenBoard",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "address_white",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "address_black",
+          "type": "address"
+        }
+      ],
+      "name": "getBoardState",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getGreeting",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "boardState",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "address_white",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "address_black",
+          "type": "address"
+        }
+      ],
+      "name": "updateBoard",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}

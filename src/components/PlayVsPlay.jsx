@@ -4,7 +4,8 @@ import { ethers } from "ethers";
 import { Chess } from 'chess.js'
 import { Chessboard } from 'react-chessboard';
 
-import FenBoardService from '../smart_contracts/FenBoardService.json';
+// import FenBoardService from '../smart_contracts/FenBoardService.json';
+import FenService_Metis from '../smart_contracts/FenService_Metis.json';
 
 import { isTruthy } from '../service/isTruthy';
 
@@ -28,8 +29,8 @@ export default function PlayVsPlay({ boardWidth, address }) {
     const fetchBoardState = async () => {
       try {
 
-        const contractAddress = FenBoardService["deployment"]["address"];
-        const contractABI = FenBoardService["abi"];
+        const contractAddress = FenService_Metis["address"];//FenBoardService["deployment"]["address"];
+        const contractABI = FenService_Metis["abi"];
         
         const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
         const smartContract = new ethers.Contract(contractAddress, contractABI, web3Provider);
@@ -58,14 +59,14 @@ export default function PlayVsPlay({ boardWidth, address }) {
     setLoading(true);
 
     try {
-      const contractAddress = FenBoardService["deployment"]["address"];
-      const contractABI = FenBoardService["abi"];
+      const contractAddress = FenService_Metis["address"]; //FenBoardService["deployment"]["address"];
+      const contractABI = FenService_Metis["abi"];
 
       const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
       const smartContract = new ethers.Contract(contractAddress, contractABI, web3Provider.getSigner());
 
       // Send a transaction to the smart contract to create a new board.
-      const tx = await smartContract.updateBoardState(fen, whiteAddress, blackAddress);
+      const tx = await smartContract.updateBoard(fen, whiteAddress, blackAddress);
       await tx.wait();
       console.log(tx);
 
@@ -148,7 +149,8 @@ export default function PlayVsPlay({ boardWidth, address }) {
    */
   function onDrop(sourceSquare, targetSquare) {
     console.log("User attempted to move a piece.");
-    if(!validateCurrentPlayer()) return;
+    // if(!validateCurrentPlayer()) return; // TODO: This validation doesn't work yet.
+    // console.log("User was validated and allowed to move the piece.");
 
     const gameCopy = { ...game };
     const move = gameCopy.move({
@@ -173,14 +175,14 @@ export default function PlayVsPlay({ boardWidth, address }) {
 
     try {
       
-      const contractAddress = FenBoardService["deployment"]["address"];
-      const contractABI = FenBoardService["abi"];
+      const contractAddress = FenService_Metis["address"]; // FenBoardService["deployment"]["address"];
+      const contractABI = FenService_Metis["abi"];
 
       const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
       const smartContract = new ethers.Contract(contractAddress, contractABI, web3Provider.getSigner());
 
       // Send a transaction to the smart contract to create a new board.
-      const tx = await smartContract.createNewBoard(whiteAddress, blackAddress);
+      const tx = await smartContract.createBoard(whiteAddress, blackAddress);
       await tx.wait();
       console.log(tx);
 

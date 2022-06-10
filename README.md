@@ -74,6 +74,13 @@ Metis allows for staking of Metis. If Metis grows, that would be a super safe st
 Deflationary token burning will be done.
 Staking will allow for auto-compounding.
 
+The Price Floor Vault can cover ALL TOKENS IN CIRCULATION with its given price.
+If a user stakes or mints a Node then his given money is not added to The PFV's since they can withdraw / burn it at any time.
+Part of the profits from his stakes / mints will be added to The PFV.
+How does The PFV make its money? Rug-pull DAO's? Pump-n-Dump idea to create transactions? Semi gambling idea?
+
+Governance Tokens can be used to increase The PFV. Need to figure out how.
+
 How and why minting will be done:
 A Staking pool for minting new tokens will be created.
 Staking in this pool commits you to The Price Floor Vault.
