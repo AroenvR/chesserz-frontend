@@ -1,4 +1,10 @@
-# Welcome to my application template.
+# Do not read unless bored.
+
+Disclaimer: this is heavily a WIP with an end result hopefully in 3 years or less from now unless I canned the project.  
+Most of the text from here on out is just a ton of personal notes to myself.  
+And not necessarily relevant to this project.  
+
+You've been warned.
 
 This folder already is a Git repository.
 .gitignore has been configured.
